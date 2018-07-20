@@ -343,6 +343,7 @@ function parseModule(m) {
     depth: m.depth,
     issuers: m.reasons
     // Stats.js filters out modules only https://github.com/webpack/webpack/blob/5433b8cc785c6e71c29ce5f932ae6595f2d7acb5/lib/Stats.js#L335
+      .filter(d => d.moduleId !== null)
       .map(d => ({
         // again make sure to use string for id:
         graphId: d.moduleId.toString(),
@@ -429,7 +430,7 @@ function buildGraph(stats) {
       .map(parseModule)
       .filter(showModule);
 
-    const clusterDetails = parseClusterDetails(chunkIds.map(c => stats.chunks[c]));
+    const clusterDetails = parseClusterDetails(chunkIds.filter(id => stats.chunks[id]));
     const chunkCluster = createStyledCluster(graph, clusterDetails);
 
     function createModuleNode(cluster, m) {
@@ -706,17 +707,17 @@ function interactiveHtml(svgGraphFileName) {
   return `
 <!--
 * Copyright (c) 2015 Mountainstorm
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
